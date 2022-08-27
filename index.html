@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>webapi-demo</title>
+</head>
+
+<body>
+    <form>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" />
+        <br />
+        <label for="field1">Field1</label>
+        <input type="checkbox" id="field1" name="field1" />
+        <button id="btnSubmit" type="button">Submit</button>
+        <br />
+        <br />
+        <p>
+            The server's response:
+            <br />
+            <span id="serverResponse"></span>
+        </p>
+    </form>
+
+    <script>
+        const inputUsername = document.getElementById('username');
+        const inputField1 = document.getElementById('field1');
+        const btnSubmit = document.getElementById('btnSubmit');
+
+        const serverResponse = document.getElementById('serverResponse');
+
+        btnSubmit.addEventListener('click', async () => {
+            const formValues = {
+                username: inputUsername.value,
+                inputField1: inputField1.checked
+            };
+
+            console.log('Pressed submit: ', JSON.stringify(formValues));
+
+            const response = await fetch('https://localhost:5001/test/endpoint1', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify(formValues),
+
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                serverResponse.innerText = 'OK, Server responded with: ' + data;
+            } else {
+                serverResponse.innerText = 'Error, server responded with: ' + data;
+            }
+        });
+    </script>
+</body>
+
+</html>
